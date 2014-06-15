@@ -103,11 +103,18 @@ class VKOAuth2(BaseOAuth2):
                         'photo'] + self.setting('EXTRA_DATA', [])
 
         fields = ','.join(set(request_data))
-        data = vk_api(self, 'users.get', {
-            'access_token': access_token,
-            'fields': fields,
-            'uids': response.get('user_id')
-        })
+        try:
+            data = vk_api(self, 'users.get', {
+                'access_token': access_token,
+                'fields': fields,
+                'uids': response.get('user_id')
+            })
+        except:
+            data = vk_api(self, 'users.get', {
+                'access_token': access_token,
+                'fields': fields,
+                'uids': kwargs.get('user_id')
+            })
 
         if data.get('error'):
             error = data['error']
